@@ -7,8 +7,8 @@
 
 double time_ms(struct timeval start, struct timeval stop)
 {
-	double sec1 = ((double)(stop.tv_usec - start.tv_usec))/1000000;
-	double sec2 = (double)(stop.tv_sec - start.tv_sec);
+	double sec1 = (stop.tv_usec - start.tv_usec)/1000000.0;
+	double sec2 = stop.tv_sec - start.tv_sec;
 	return (sec1 + sec2) * 1000.0;
 }
 
