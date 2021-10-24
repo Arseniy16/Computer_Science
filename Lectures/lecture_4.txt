@@ -1,0 +1,71 @@
+/////////////////////
+//   LECTURE №4    //
+/////////////////////
+
+$... cmd _        arg1 arg2   <file >out 2>err
+						 	  stdin stdout  stderr
+		tab, space
+
+while (!eof(stdin))
+{
+	print prompt
+	readline
+	do
+	wait children
+}
+
+-> parse syntax
+	fork   		| 
+	execvp 		| -> pipe in, out, err
+
+
+func: fddopen("out", ...)
+
+2)
+cmd1 a |...|  cmd ...
+cmd1|  cmd2| cmd3...
+stdout->pipe->stdin
+//---------------------------
+
+cat: in -> out
+wc: word count
+sort: sort
+uniq: delete a;; duplicats
+set: searching
+grep: searching regular expressions
+one-liner
+tr: a-z A_Z
+
+DO: myshell
+$ls
+$ls -l | wc
+$ls -l | cat | wc
+//-------------------
+
+NO: od /bin/ls |cat|cat|wc
+octal dump
+
+notexist
+
+exit() - to exit via shell
+
+1)debug
+NO: ps ax | grep myshell
+than you get PID your process
+
+ls -l /proc/PID/fd
+-------0 -> /dev/pty5
+	   1
+	   ..
+	   7 -> pipe...
+	   8 -> pipe...
+	|  9   |
+	|  10  |
+	|  11  |
+
+2)debug
+gcc -g
+valgrind myshell
+CTRL-D
+memory leak
+

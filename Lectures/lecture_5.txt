@@ -1,0 +1,129 @@
+////////////////////////////////
+//   LECTURE №5 (PROCESSES)   //
+////////////////////////////////
+
+IPC - Inter Process Communication
+
+time
+|	sleep
+|
+|	задача
+|
+|		|1) read {...			\
+					blocked		| -System V IPC
+					wait		| -POSIX IPC
+				 }				/
+v		|
+		| sleep
+1)while() |<- точка рандеву
+		| data
+		|
+		|
+		|1) read{...
+					результат
+				}
+
+receiveing
+
+printf("%s Действие") // для отладки можно еще и pid
+	 	|
+	(идентиф-р)
+
+sending
+
+sleep
+
+DO:
+Бег со стадиноном с эстафетной палочкой
+Судья - N штук
+Бегуны
+
+Задача Судьи: 
+ждет игроков, объявляет о начале сорев
+старт №1(с палочкой)
+ждет игр. №2
+объявляет результат
+закрывает соревы
+
+Задача бегуна:
+прийти
+заявиться судье
+ждать палочку
+бежать
+отдать палочку
+ждать результат
+до свидания
+завершиться
+
+Judge--------------
+|		  |	      |
+Run1	Run2 	Run3
+
+Judge	Judge	Run2
+|		  |		  |
+Run1	Run2	Run3
+
+System V IPC
+POSIX	 IPC
+
+msg	sem	shm
+
+id = key 32-bit
+
+path to key(более удобный способ именнования ключей)
+
+key = ftok(path, salt);
+	 	   		(0-256)
+
+id = msgget(key, mode)
+				  0777|
+(необходимо удалять)
+
+mode: IPC_CREAT 
+	  IPC_EXCL (запрещаем открывать старый)
+
+key: IPC_PRIVATE(по пути "создаем новый объект")
+
+очередь сообщений : FIFO
+
+FIFO
+|	
+	->size
+-----	 -----	  -----
+| 1	| -> | 2 | -> |	5 |
+-----	 -----	  -----
+msg 	  msg  		msg
+
+
+msgsnd(id, msg, size, flags);
+
+msgrcv(id, msg, size, type, flags);
+
+type = 0: готовы принять любое сообщение
+type > 0: принимаем сообщения только указанного типа
+type < 0: принимаем от j до |j_N|
+
+	----------------
+long|	type		|
+	----------------
+	|	data		| size
+	----------------
+
+struct msg buf
+{
+	long type;
+	....
+}
+
+msgctl(id, cmd, param);
+cmd: IPC_RMID
+
+
+DO:
+Runners N
+-queue
+-judge
+-runners [N]
+-------------
+Judge(N, id)		Runners(N, 1, id)
+/		\		

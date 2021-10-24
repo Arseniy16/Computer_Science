@@ -1,0 +1,194 @@
+/////////////////////
+//   LECTURE №2    //
+/////////////////////
+
+path
+
+строка -    O-terminated
+
+/
+
+/.bin 
+.user
+	.bin   <-->  /usr/bin  - absolute
+
+usr/bin/ls	- relative
+
+current directory
+
+EX: 
+$pwd
+$cd /tmp
+
+"." - current, ".." - parrent
+$./hello
+
+RM: специальные символы для оболочки
+
+file descriptor - fd
+
+fdtable[0 - MAX]
+
+fd = open(path, flag, mode)
+
+fd >= 0 - success
+fd < 0 (-1) - error
+
+int errno; //#include <errno.h>
+
+NO: section errors
+
+ENOENT - "No such file of directory"
+
+char * s = strerror(number err);
+
+perror(str) - print str_error to stdout
+str: No such ...
+
+if (fd < 0) 
+{
+	perror(path);
+	return -1; (errno)
+}
+--------------------------------------------
+FLAGS:
+-O_RDONLY
+-O_WRONLY
+-O_RDWR
+
+O_RDONLY | O_EXCL 
+
+-O_WRONLY:
+	-O_CREATE - create file if not exist
+	-O_EXCL - exclude open file already exist 
+	-O_TRUNC - write from begining
+
+MODE: r w rw
+
+---------------------
+r  w |	x	| r	w x	|
+---------------------
+|user| group| other |
+---------------------
+
+const "0777" - do what you want
+
+
+func: int close(int fd)
+
+int CLOSE  = close(int fd)
+CLOSE = 0 - success
+CLOSE < 0 - error
+
+NO: nopen = 0 (file is unuseful)
+
+func: ssize_t read(int fd, void * buf, size_t size)
+
+READ = read(...)
+
+READ < 0 - err
+READ == 0 - end of file (eof)
+READ > 0 - data
+
+func: int write()
+return: 
+ < 0 - error
+ > 0 - success
+( = 0) no  
+
+
+fd = 0 - for read (stdin)
+fd = 1 - for write (stdout)
+fd = 2 - for write error (stderr)
+
+/////////////////////////////////////////////////////////////////////////
+////////////////        LESSON PROBLEMS            //////////////////////
+/////////////////////////////////////////////////////////////////////////
+DO-----------------
+do cat:
+1) param = nothing -> info 
+(просто вывести в stdout, если cat без параметров)
+
+2) cat file1 file2 ...
+	fore each file
+	open
+	while -> 1
+	close
+(если cat с параметрами(file1, file2), то вывести в stdout каждый файл (склеить их и вывести))
+
+for Homework:
+
+NOTE: use perror, stderr
+don't use printf(just read and write)
+
+HomeWork: do cp
+Do:
+---------------------------
+mycp file1 file2
+	-v  --verbose
+	-f  --force
+	-i  --interactive
+---------------------------
+Do with this 3 parameters and 
+provide mixing(with function getopt, getopt_long) parameters like: 
+	cp -f a b
+	cp a b -f
+	cp a -f b
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+
+cp 
+	-f 		
+	--verbose
+	-f -o -p
+	-o file
+	--output = file
+
+cp -f a b
+cp a b -f
+cp a -f b
+
+func: 
+	-getopt(argc, argv, options), options = "rw"
+	-getopt_long()
+Находит очередную опцию 
+если нет опций return -1
+
+{"--verbose", 'v', --//--}
+{"--force", 'f', --//--}
+
+Do:
+mycp file1 file2
+	-v  --verbose
+	-f  --force
+	-i  --interactive
+---------------------------
+mycp file1 file2  dir
+	 \\\\\\\\\\\	^
+	 	|			| (paste)
+	 	\-----------/
+
+while(getopt != -1)
+{
+	switch()
+	case 'v': 
+		opt_verbose = TRUE;
+		break;
+	case 'i': --//--
+	...
+
+}
+NO:
+-optind (указывает на первый неопциональный аргумент)
+-optind++ 
+
+можно пересортировать с помощью optind
+like:
+cp a b -f
+cp -f a b
+
+cp -i
+un(alias) cp
+/bin/cp
+
+

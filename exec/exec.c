@@ -29,12 +29,6 @@ int main(int argc, char const *argv[])
     {
         pid = fork();
 
-        if (gettimeofday(&start, NULL) == -1)
-        {
-            perror("ERROR to get time start");
-            return -2;
-        }
-
         if (pid == -1)
         {
             perror("ERROR to fork");
@@ -52,12 +46,7 @@ int main(int argc, char const *argv[])
         {
             wait(&status);
         }   
-
-        if (gettimeofday(&stop, NULL) == -1)
-        {
-            perror("ERROR to get time stop");
-            return -2;
-        }                       
+                     
     }
 
     printf("TIME: %.3lg ms\n", time_ms(start, stop));
