@@ -11,6 +11,8 @@
 #include <errno.h>
 #include <getopt.h>
 #include <string.h>
+#include <ctype.h>
+#include <dirent.h>
 
 #define BUF_SIZE 1024 
 
@@ -56,37 +58,44 @@ void verbose(char * input, char * output)
  */
 int interactive(char * name_file)
 {
-    if (open(name_file, O_WRONLY|O_CREAT|O_EXCL, PERMS) == -1)
-        if(errno == EEXIST)
+    int fd = -1;
+    if ((fd = open(name_file, O_WRONLY|O_CREAT|O_EXCL, PERMS)) == -1)
+    {
+        if (errno == EEXIST)
         {
             write_file(1, "cp: overwrite '", sizeof("cp: overwrite '"));
             write_file(1, name_file, strlen(name_file));
-			write_file(1, "'? ", sizeof("'? "));
+            write_file(1, "'? ", sizeof("'? "));
 
             char c = 0;
-            while((c = getchar()) == '\n')
-            	fflush(stdin);
-                
-            if(toupper(c) == 'Y')
+            while ((c = getchar()) == '\n')
+                fflush(stdin);
+
+            if (toupper(c) == 'Y')
             {
                 return 0;
             }
 
-            return 1;
+            return -1;
         }
+    }
+
+    close_file(fd); 
     return 0;
 }
 
 /**
- *  //--force//
- *  If an existing destination file cannot be opened, remove it  and
- *  try  again  (this  option  is ignored when the -n option is also
- *  used)
+ * //--force//
+ * If an existing destination file cannot be opened, remove it  and
+ * try  again  (this  option  is ignored when the -n option is also
+ * used)
  */
 int force (char * name_file)
 {
-    if (open(name_file, O_WRONLY|O_CREAT|O_EXCL, PERMS) == -1)
-        if(errno == EEXIST)
+    int fd = -1;
+    if ((fd = open(name_file, O_WRONLY|O_CREAT|O_EXCL, PERMS)) == -1)
+    {
+        if (errno == EEXIST)
         {
             if (open(name_file, O_WRONLY, PERMS) == -1)
             {
@@ -104,10 +113,13 @@ int force (char * name_file)
             }
             return 0;
         }
+    }
+
+    close_file(fd);
     return 0;
 }
 
-int my_getopt(int argc, char ** argv)
+int my_getopt (int argc, char ** argv)
 {
     static struct option long_options[] =
     {
@@ -149,46 +161,33 @@ int my_getopt(int argc, char ** argv)
     return optind;
 }
 
-int get_path (char * name_file, char * dir_file, char * path)
-{
-    strcpy(path, dir_file);
-
-    if (strrchr(dir_file, '/') == NULL)
-    {
-        strcat(path, "/");
-    }
-
-    strcat(path, name_file);
-
-    return 0;
-}
-
 int copy_file (char * input, char * output)
 {
-    if (INTERACTIVE) 
-        if (interactive(output)) 
-            return -1;
-    
-    if (FORCE) 
-        if (force(output)) 
-            return -1;
-
-    if (VERBOSE) 
-        verbose(input, output);
-
     int inputFd = open(input, O_RDONLY);
-
     if (inputFd  == -1) 
     {
         error(0, errno, "%s", input);
         return -1;
     }
-    
+
+    if (INTERACTIVE) 
+        if (interactive(output) < 0)
+            return -1;     
+            
+    if (FORCE) 
+        if (force(output) < 0) 
+            return -1;
+
+    if (VERBOSE) 
+        verbose(input, output);
+
     int outputFd = create_file(output, PERMS);
 
-    int size = read_file(inputFd, buf, BUF_SIZE);
-    
-    write_file(outputFd, buf, size);  
+    size_t size = 0;
+    while (size = read_file(inputFd, buf, BUF_SIZE))
+    {
+        write_file(outputFd, buf, size);
+    }
 
     close_file(inputFd);
     close_file(outputFd);
@@ -200,15 +199,21 @@ int dir_copy (char * name_file, char * dir_file)
 {
     int length = strlen(name_file) + strlen(dir_file) + 1;
     
-    char * path = (char *) calloc(length, sizeof(char));
-
+    char * path = malloc(length);
     if (path == NULL)
     {
         error(0, errno, "ERROR, path == NULL");
         return -1;
     }
 
-    get_path(name_file, dir_file, path);
+    strcpy(path, dir_file);
+
+    if (strrchr(dir_file, '/') == NULL)
+    {
+        strcat(path, "/");
+    }
+
+    strcat(path, name_file);
 
     copy_file(name_file, path);
 
@@ -267,6 +272,16 @@ int close_file(int fd)
     return fd;
 }
 
+int is_dir(char * name_dir)
+{
+    DIR * ptr = NULL;
+    if ((ptr = opendir(name_dir)) == NULL)
+        return 0;
+
+    closedir(ptr);
+    return 1;
+}
+
 int main(int argc, char *argv[])
 {
     int size = 0;
@@ -283,30 +298,14 @@ int main(int argc, char *argv[])
         /**
          * if not a directory
          */
-        if (opendir(argv[argc-1]) == NULL)
+        if (!is_dir(argv[argc-1]))
         {
             if ((errno == ENOTDIR) || (errno == ENOENT))  
             {
                 if (new_argc == 2)
                 {
-                	/**
-                	 * for usual path: mycp input output 
-                	 */
-                    char * ptr = strrchr(argv[argc-1], '/');
-                    if (ptr == NULL)
-                    {
-                        copy_file(argv[optind], argv[argc-1]);
-                        return 0;
-                    }
-                    /**
-                     * for unusual path like this: mycp input dir/output
-                     */
-                    else if (*(ptr + 1) != '\0')
-                    {
-                        copy_file(argv[optind], argv[argc-1]);
-                        return 0;
-                    }
-
+                    copy_file(argv[optind], argv[argc-1]);
+                    return 0;
                 }
                 
                 fprintf(stderr, "%s: the target %s is not a directory\n", argv[0], argv[argc-1]);
@@ -319,8 +318,8 @@ int main(int argc, char *argv[])
         else
         {
             for (optind; optind < argc-1; optind++)
-                dir_copy(argv[optind], argv[argc-1]);
-
+                if (dir_copy(argv[optind], argv[argc-1]) < 0)
+                    return -1;
         }
     }
     else
