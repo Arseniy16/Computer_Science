@@ -1,1 +1,0 @@
-/usr/bin/cc   -rdynamic CMakeFiles/va_list.dir/va_list.c.o  -o va_list 
