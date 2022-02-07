@@ -1,0 +1,3 @@
+/home/arseniy/Computer_Science/ignore/my/tmp/CMakeFiles/rebuild_cache.dir
+/home/arseniy/Computer_Science/ignore/my/tmp/CMakeFiles/edit_cache.dir
+/home/arseniy/Computer_Science/ignore/my/tmp/CMakeFiles/va_list.dir

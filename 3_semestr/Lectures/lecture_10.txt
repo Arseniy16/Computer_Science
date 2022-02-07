@@ -1,0 +1,60 @@
+
+
+
+
+цикл >= PIPE buf
+
+write(l, blocked)
+
+poll /soliet
+
+read(1, -> blocked)
+read(2, )
+
+non-blocked
+problem 10k no data
+
+
+вход
+	массив fd
+	ожидание
+
+выход
+	другой массив fd
+	события I/O read
+				write
+				error
+
+func: poll(struct pollfd, int nfds, struct timeout)
+	|
+	--> int fd	|
+	|			| IN POLLIN | POLLOUT | POLLERR | POLLHUP | POLLOUT
+	--> events  |  read			write                close
+	|
+	--> revonds?
+
+for (...)
+	read
+	write
+
+
+func: select(fd_set * exceptfds)
+---------------------
+| 0 | 1 | 1 | 0 |	| <- выставляем биты(что хотим посмотреть)
+---------------------
+fd - in/out
+----
+rfds (read)
+wfds (write)
+efds (error)
+
+while(...)
+	prepare rfds, wfds, efds
+	select
+	for (...)
+
+func: epoll() <- работа с ядром более мелкими методами
+
+problem:
+mycat -N (by default N = 10)
+mycat должен породить N процессов

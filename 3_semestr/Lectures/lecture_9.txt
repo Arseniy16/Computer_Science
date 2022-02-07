@@ -1,0 +1,131 @@
+/////////////////////////////////////////
+//   LECTURE  Сигналы                ////
+/////////////////////////////////////////
+
+Async events
+
+process   - os  -   hardware
+
+Sig number: value > 0 (1,2,3,... MAX)
+-------
+SIGINT
+
+-обработка
+1)игнорирование \ по умолчанию 
+2)завершение    /
+3)функция обработчик
+    void handler(int signal)
+    {
+    ....
+    }
+
+надежный api                      |   ненадежный api
+reliable                          |   unreliable
+
+-sigaction(...)                   |   -signal(int number, func)   NO: SIGKILL 9
+struct sigaction()                |                       SIG_IGN
+{                                 |                       SIG_DFL
+    func;
+    flag;
+    mask;                         |
+}
+
+sigset_t                          |
+signal mask
+pending mask
+-----------------
+|   | 1  | 0 | 1 |
+-----------------
+
+blocked mask
+
+                                    pause(); //blocked and wait signal
+
+                                    int flag;                                       sending(0)
+                                    while() <---
+                                        pause();        USR1---> flag = 0           sending()
+                                        x=flag;         USR2---> flag = 1
+                                    
+                                    void receiver()                                    ^
+                                    {                                                  |
+                                        flag 0|1;                                      | 
+                                        sending(); ------------------------------------
+                                    } signal(...)
+
+                                    -sigsuspend(mask)
+                                   //block all signal
+                                   while(!flag) <----- while(!got0 && !got1)
+                                       sigsuspend(mask)
+                                                  USR1 USR2
+
+-sigsetmask(mask, how)
+-SET    -BLOCK
+-ADD    -REMOVE UNBLOCK
+
+sigset_t s;
+sigfillset(1111)
+    emptsed(000)
+    add
+    del
+    isset
+    isempty
+
+Виды сигналов:
+Клавиатурные сигналы
+^C ---> SIGINT
+^\ ---> SIGQUIT(core dump)
+^z ---> SIGSTOP (RUNNIG -> SUSPEND)
+(fg)---> SIGCONT (continiue process)
+
+^S,             ^Q,             ^D - not signals        
+|               |               |
+v               v               v
+stop output     flowcontrol     stdin
+
+SIGTERM
+SIGKILL - not ignored process
+SIGHUP - 
+
+SIGSETV - отсутстувует страница
+SIGBUS
+SIGFPU - делим на ноль или делаем всякую фигню
+SIGALRM
+SIGCHLD
+SIGPIPE
+
+NO: kill(pid, sig);
+
+---------------------
+Realtime signals: 
+          +32
+Вставляются в очередь
+
+siginfo
+{         int
+    val. void*
+}
+
+-sigqueue()
+{
+    send
+}
+-sigwait
+-sigwaitinfo
+-sigtimingwait
+
+
+PROBLEM:
+Передать из одного процесса в другой строку
+Сделать две проги: receiver.c, sending.c
+Receier должен получить файл. Sending должен отправить file.c
+receiver <
+          \
+sending pid  file.c
+
+Использовать можно только сигналы!!! Если очень сложно, то можно юзать real-time сигналы
+
+NO: SIGWINCH
+
+NO: pidof
+
+sending 'pidof receiver'

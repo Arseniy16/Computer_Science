@@ -1,0 +1,97 @@
+/////////////////////////////////////////
+//   LECTURE №7 (Разделяемая память)   //
+/////////////////////////////////////////
+
+
+-ftok
+
+
+DO:
+analog mycat 
+передача между myread и mywrite
+задействуя разделяемую память 
+
+-shmget(key_t key, size_t size, int shmflg) - выделяет разделяемую память System 5
+
+-shmat(int shmid, const void * shmaddr, int shmflg) - присоединить разделяемую память 
+NO: shmaddr = NULL
+
+-shmdt(const void *shmaddr) - отсоединить разделемую память
+
+Ex:
+
+int main()
+{
+	struct data
+	{
+		int x, u;
+		char s[80];
+	};
+
+	struct data * p = malloc(sizeof(*p));
+
+
+	int id = shmget(key, sizeof(struct(data)), IPC_CREAT|0666);
+	struct data * s = shmat(id, NULL, 0);
+
+	while ()
+	{
+		// if semget(IPC_CREAT | IPC_EXCL)
+		// {
+		//		semop +1
+		//		msgsnd
+		// }
+		// if semget()
+		// {
+		// }
+	}
+
+	//critical section begin (semop -1) or (msgrcv)
+	p->x = s->u;
+	//...
+	//
+	//critical section end (semop +1) or (msgsnd)
+
+	shmdt(s); //detach segment
+
+	shmctl(id, IPC_RMID, 0);
+}
+
+
+psevdo code
+
+//ipc objects
+shared buffer[4096];
+sem r;
+sem w;
+
+reader()
+{
+	n = read(buffer, 4096);
+
+	w += n;
+}
+
+writer()
+{
+	w -= m;
+
+	P(r);
+	//...
+
+	V(s);
+}
+
+
+
+
+
+
+
+
+
+
+0
+
+
+

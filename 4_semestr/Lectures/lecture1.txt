@@ -1,0 +1,59 @@
+
+ООП
+инкапсуляция [1] -> имплементация и интерфейс
+наследование
+полиморфизм
+
+[1]
+
+object = data + algorithm
+
+struct shape
+{
+	char * name;
+	int x, y, z;
+	void print()
+	{}
+} shape;
+
+shape_print();
+
+struct shape;
+
+shape_create(...);
+shape_alloc(...)
+shape_init
+	 _initZ
+	 _init_withColor
+
+shape_destroy();
+
+//-----------------------
+project
+
+list.c
+list.h
+test_sort2.c
+----------
+vector.c
+vector.h
+test_sort1.c
+-------------
+Makefile
+
+#include <stdio.h>
+#pragma once
+
+
+struct list
+{
+	
+};
+
+list_create();
+void list_destroy(list *);
+
+$list.c
+#include "list.h"
+
+struct iter

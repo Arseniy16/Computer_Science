@@ -1,0 +1,164 @@
+/////////////////////////////////////////
+//   LECTURE  Мониторы Хоара           //
+/////////////////////////////////////////
+
+a, b
+
+lock(a)         lock(b)
+|               |   
+|               |
+|               lock(a)
+lock(b)         
+
+It's a critical section
+\--------------------------------/
+struct Shared Monitor Miner
+{
+    // int semid semm;
+
+    int a, b;
+
+    set mine();
+    reset mine();
+    up();
+    down();
+    geta();
+};
+
+call/enter critical section
+                                    semop(-1);
+    geta();                         x = geta();
+                                    semop(+1);
+    leave();
+
+algorithm
+|
+|
+...
+single
+|
+...
+parallel
+-------------
+|cooperate  |
+|call geta()|
+-------------
+
+a, b
+
+lock(a)
+while (condition)
+    lock();
+        <--- put() <-----semop(-1);
+    wait();
+
+
+func: wait_and_unlock(s, a);
+                      -1 +1 
+
+
+POSIX threads;
+
+process:
+
+    / context /
+kernel  |   user  |  cpu  |
+        
+   save         
+<---------------------
+            
+cpu
+--------
+|       | 1
+--------- 
+|       | 2
+---------
+|       | 3
+|-------|
+
+
+    fork()
+   /    \
+ p       c
+
+ create thread
+                                null
+func: pthread_create(&thread, &attributes, func, data)
+
+void * func(void * p)
+{
+    return * px;
+}
+
+func: pthread_join(thread); <---- wait
+func: pthread_exit(px) <---> return(px);
+
+func: pthread_terminated;
+
+
+virtual mem
+    stack  
+-----------
+
+ stack t1  <--- 120кб
+-----------
+   data        mutex_t m;
+               init
+-----------    lock(m)
+               unlock(m)
+               trg lock
+   code
+-----------
+
+
+-----------
+
+mutex_t m;
+      init
+   lock(m)
+ unlock(m)
+  trg lock
+
+cond_t c;
+cond_wait(c, m);
+cond_wake
+
+
+call
+------------
+pthread.mutex.lock()
+    m->lock();
+geta(m);
+... m.unlock(m->lock);
+
+
+geta()
+-----------
+while (!queue->empty)
+    pthread.cond.wait(c.empthy, lock);
+
+NO: use pthread.cond.broadcast() вместо pthread
+
+puta()
+cond_broadcast
+
+Do rwlock:
+
+data {}
+
+shared read;
+exclusive write; (ждем пока дойдут все читатели)
+два write работать одновременно не могут(сначала ждать, пока все завершится)
+
+
+DO bathroom:
+
+bathroom
+
+RN - кол-во душевых кабин 
+man and woman
+
+кол-во больше одного хотят зайти в ванну
+ждем завершения всех и запускаем других (рав-во полов)
+
+можно добавить cleaner(закрывает доступ для всех) 
