@@ -1,35 +1,18 @@
-#pragma once
+#ifndef _LIST_H_
+#define _LIST_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-
-typedef struct Node
+enum Errors
 {
-    int value;
-    struct Node * next;
-    struct Node * prev; 
-} Node;
+    INVALID_ARG = -1000,
+    MEM_ERR,
+    LIST_EMPTY,
+    NO_ELEM;
+};
 
-typedef struct List
-{
-    size_t size;
-    Node * head;
-    Node * tail;
-} List;
-
-// for list
-List * list_create();
-List * list_init(const size_t len, const int * data);
-void list_destroy(List * list);
-
-void push_back(List * list, const int data);
-int pop_back(List * list);
-void push_front(List * list, const int data);
-int pop_front(List * list);
-Node * get_elem(List * list, const size_t index);
-void insert(List * list, const size_t index, const int data);
-void print_list(List * list);
 
 // for sort_list
-void insert_before(List * list, Node * elem, const int data);
-void insertion_sort(List ** list, int (*cmp)(const void *, const void *));
+
+err_t insert_before(List * list, Node * elem, const elem_t data);
+err_t insertion_sort(List ** list, int (*cmp)(const void *, const void *));
+
+#endif //_LIST_H_

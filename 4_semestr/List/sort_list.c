@@ -1,21 +1,26 @@
 #include <stdio.h>
-#include "list.h"
+#include "listPrivate.h"
 
-void insert_before(List * list, Node * elem, const int data) 
+err_t insert_before(List * list, Node * elem, const elem_t data) 
 {
-    Node * new = NULL;
-    if (elem == NULL) 
+    if ((list == NULL) || (elem == NULL)) 
     {
-        return;
+        return INVALID_ARG;
     }
-     
+
+    Node * new = NULL;     
     if (elem->prev == NULL) 
     {
-        push_front(list, data);
-        return;
+        list_pushFront(list, data);
+        return 0;
     }
 
     new = (Node*) malloc(sizeof(Node));
+    if (new == NULL)
+    {
+        return MEM_ERR;
+    }
+    
     new->value = data;
     new->prev = elem->prev;
     elem->prev->next = new;
@@ -23,15 +28,22 @@ void insert_before(List * list, Node * elem, const int data)
     elem->prev = new;
  
     list->size++;
+
+    return 0;
 }
 
-void insertion_sort(List ** list, int (*cmp)(const void *, const void *))
+err_t insertion_sort(List ** list, int (*cmp)(const void *, const void *))
 {
+    if ((*list) == NULL)
+    {
+        return INVALID_ARG;
+    }
+
     List * out = list_create();
     Node * new = NULL;
     Node * old = NULL;
 
-    push_front(out, pop_front(*list));
+    list_pushFront(out, list_popFront(*list));
 
     old = (*list)->head;
     while (old)
@@ -47,7 +59,7 @@ void insertion_sort(List ** list, int (*cmp)(const void *, const void *))
         }
         else 
         {
-            push_back(out, old->value);
+            list_pushBack(out, old->value);
         }
 
         old = old->next;     
@@ -55,4 +67,6 @@ void insertion_sort(List ** list, int (*cmp)(const void *, const void *))
 
     free(*list);
     *list = out;
+
+    return 0;
 }

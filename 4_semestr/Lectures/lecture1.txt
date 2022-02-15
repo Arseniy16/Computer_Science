@@ -10,10 +10,10 @@ object = data + algorithm
 
 struct shape
 {
-	char * name;
-	int x, y, z;
-	void print()
-	{}
+    char * name;
+    int x, y, z;
+    void print()
+    {}
 } shape;
 
 shape_print();
@@ -23,8 +23,8 @@ struct shape;
 shape_create(...);
 shape_alloc(...)
 shape_init
-	 _initZ
-	 _init_withColor
+     _initZ
+     _init_withColor
 
 shape_destroy();
 
@@ -47,7 +47,7 @@ Makefile
 
 struct list
 {
-	
+    
 };
 
 list_create();
@@ -57,3 +57,177 @@ $list.c
 #include "list.h"
 
 struct iter
+
+
+Lecture 2
+
+struct apple
+{
+    int x, y, z;
+    int color;
+    set_xy();
+    set_data();
+    draw();
+};
+
+struct warmapple
+{
+    struct apple a;
+    worm worm[10];
+}
+
+//C++
+
+struct warmapple 
+    : apple
+{
+    \\--old-data(from apple)-\\
+    draw();
+}
+
+a = apple_create();
+apple_draw(a);
+
+warm = warmaple_create();
+wapple_draw(warm);
+
+
+///////////////////
+
+Apple a;
+a.draw(); //apple::draw();
+WApple w;
+w.draw();
+
+obj -> Apple -> warmapple
+|
+\---->> warm
+
+
+apple       warm
+    \      /
+    warmapple          
+
+struct warmapple
+{
+    struct apple a;
+    struct warm w;    
+}
+
+apple_draw()
+wormapple_draw(wormapple * p)
+{
+    apple * a = p;
+    warm * w = &p->w;
+    apple_draw(a); \
+                     static tipization
+    warm_draw(w);  /   
+}
+
+EX:
+
+apple * a = ...;
+warmapple = ...;
+a->draw();
+wa->draw();
+
+NEW:
+obj * a = apple_create();
+apple * a = ...;
+obj * wa = ...;
+
+a->draw();
+wa->draw();
+
+obj * p = a | wa;
+p->draw(); ???
+
+C++ v ptr;
+C
+struct apple{ };
+struct apple_m
+{
+    void (*draw)(apple * );
+    void (*SRtxy)(apple *);
+
+};
+
+1)apple :      
+-------------       
+| m | data  |
+-------------
+
+2)apple :      
+-------------       
+| m | data  |
+-------------
+  \ ptr ---
+   \--->| | <- таблица методов
+        ---
+
+1) a->draw(a); //struct without ptr (C)    2) a->m.draw(a); //struct with ptr(C++)
+
+apple_draw(p)
+{
+    ad = (char*)p +  sizeof(apple.m);
+    ad -> color;
+    ad -> x;
+}
+
+---------------------
+struct cont_methods
+{
+    next();
+    prev();
+    index();
+    first();
+    last();
+
+}
+
+cont:
+cont_methods;
+data(empty);
+
+cont        ---------\
+|                    |
+container_methods   cont_methods
+|                    |
+V                    V
+list_data            vector_data   
+
+
+list.create()
+{
+    m->first = list_first;
+    ////
+    ////
+}
+
+vector.create()
+{
+    m->first = vector->first;
+    ////
+    ////
+}
+
+test_program
+
+-Dcreate = list_create
+
+list * l = list_create();
+cont * p = vector_create();
+
+l->get_index(l, 5);
+p->add(p, new_elem);
+
+list_add(p, new_elem)
+
+1) iterator
+
+d = get_first_data();
+i = get_first();
+i = get_next(i);
+d = get_data(i);
+
+typedef int ptr_t;

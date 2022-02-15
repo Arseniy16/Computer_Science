@@ -15,13 +15,13 @@ int main()
 {
     List * list = list_create();
 
-    push_front(list, 10);
-    push_front(list, 20);
-    push_back(list, 50);
-    push_back(list, 40);
-    push_back(list, 50);
-    push_back(list, 1);
-    print_list(list);
+    list_pushFront(list, 10);
+    list_pushFront(list, 20);
+    list_pushBack(list, 50);
+    list_pushBack(list, 40);
+    list_pushBack(list, 50);
+    list_pushBack(list, 1);
+    list_print(list);
 
 #if 0    
     int a = pop_front(list); //20
@@ -37,10 +37,10 @@ int main()
 #endif
 
     insertion_sort(&list, ascending);
-    print_list(list);
+    list_print(list);
 
     insertion_sort(&list, descending);
-    print_list(list);
+    list_print(list);
     
     list_destroy(list);
 
