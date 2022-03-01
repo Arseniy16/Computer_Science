@@ -231,3 +231,183 @@ i = get_next(i);
 d = get_data(i);
 
 typedef int ptr_t;
+
+
+/////////////////////////
+/////// LECTURE 3 ///////
+/////////////////////////
+
+Паттерны проги
+
+Model. View. Controler
+
+Model : моделирование игрового процесса
+|-вызываем методы View
+|
+v
+Veiw : отображение игрового процесса
+
+Model
+^
+|- управление моделью
+|
+Controller : управление моделью
+
+Игра Snake
+Имеется прямоугольное поле, разбитое на клетки
+координаты (0,0) внизу 
+в некоторых клетках имеются кролики
+
+голова: <, >, v, ^
+Тело: ###
+
+^   >
+#   #
+#   #
+#   #
+
+do it using list: 
+head,           segment,  tail;
+(x,y)           (x,y)
+-----
+direction
+
+1)Напишем Makefile
+Model, View1, View2, Controller1,_2,_3
+
+View1: на текстовом терминале + управление цветом
+
+View2: используя графику(2d графика)
+
+Controller1: с помощью клавы (Human controller)
+
+Controller2: AI (using algorithm)
+
+Кто побеждает: smart controller
+Кто проигравает: dumb controller
+
+-----------------------------
+Makefile:
+model.h
+model.cc(cpp)
+//ModelPrivate.h
+
+View.h  --------
+| наследуются   |
+v               v
+tview.h         gview.h
+rview.cc        gview.cc    
+
+
+human.h
+human.cc
+-----------------------------
+main.cc
+
+Исполняемая прога Snake
+
+No: about Makefile
+CC -> CXX
+CFLAGS -> CXXFLAGS
+
+PROG = snake
+OBJ = model.o main.o ...
+
+all: $(PROG)
+
+clean:
+
+depend: $(CXX) -MM $(CXXFLAGS)
+    *.cc
+//or    
+    $(OBJ.o=.cc) > .depend
+
+-include .depend
+
+
+$(PROG): $(OBJ)
+    $(CXX) $(CXXFLAGS)
+//    -o $(PROG)    $(OBJ)
+//    -o $@         $^
+
+go to main.cpp: #include
+
+------------------------------------
+#include "Name.h"
+
+struct  
+class   Name
+{
+private:
+    int x,y,z;
+
+public:
+    void setColor(int data);
+    Name();
+    ~Name();
+};
+
+Name.cpp :
+#include "Name.h"
+
+void Name::setColor()
+{
+    //--//
+}
+Name::Name()
+{
+    //--//
+}
+Name::~Name()
+{
+    //--//
+}
+
+
+View.h------
+|          |  
+| наследуем|
+v          v
+TView    GView
+
+class TView : publicView
+{
+    
+}
+
+
+
+main.cpp :
+
+int main()
+{
+    View * v = get("text");
+               get("gui"); // get-func of View.h
+               View::get()
+
+    text ? TView() : GView();
+
+NO: when we will describe get: 
+TView.h :
+#include "View.h"
+static View * obj;
+static View * get();
+
+? = new Tview();
+? = new GView();
+//it's a fabric class
+
+fabir --> //singleton
+            fabric
+
+if (!obj)
+{
+    ...new...;
+    obj = ...
+} 
+return obj;
+
+}
+
+
+
