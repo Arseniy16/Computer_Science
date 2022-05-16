@@ -5,25 +5,23 @@
 
 int main(int argc, char* argv[])
 {
+    View * view = nullptr;
 
-    View * v;
     if (argc == 1)
-        v = View::getView("text");
+        view = View::getView("text");
     else
     {
-        v = View::getView(argv[1]);
+        view = View::getView(argv[1]);
     }
+
     Model model;
-    Human humanAI(model.createStartSnake());
-    DumbRobot dumbest (model);
-    LessDumbRobot dumb (model);
-    //LessDumbRobot dumb2 (model);
+    Human player(model.createStartSnake());
+    DumbRobot dumb1(model);
+    LessDumbRobot dumb2(model);
     
-    v->run();
+    view->run();
 
-    // sleep(1);
-
-    delete v;
+    delete view;
 
     return 0;
 }
