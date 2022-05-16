@@ -1,0 +1,845 @@
+
+ООП
+инкапсуляция [1] -> имплементация и интерфейс
+наследование
+полиморфизм
+
+[1]
+
+object = data + algorithm
+
+struct shape
+{
+    char * name;
+    int x, y, z;
+    void print()
+    {}
+} shape;
+
+shape_print();
+
+struct shape;
+
+shape_create(...);
+shape_alloc(...)
+shape_init
+     _initZ
+     _init_withColor
+
+shape_destroy();
+
+//-----------------------
+project
+
+list.c
+list.h
+test_sort2.c
+----------
+vector.c
+vector.h
+test_sort1.c
+-------------
+Makefile
+
+#include <stdio.h>
+#pragma once
+
+
+struct list
+{
+    
+};
+
+list_create();
+void list_destroy(list *);
+
+$list.c
+#include "list.h"
+
+struct iter
+
+
+Lecture 2
+
+struct apple
+{
+    int x, y, z;
+    int color;
+    set_xy();
+    set_data();
+    draw();
+};
+
+struct warmapple
+{
+    struct apple a;
+    worm worm[10];
+}
+
+//C++
+
+struct warmapple 
+    : apple
+{
+    \\--old-data(from apple)-\\
+    draw();
+}
+
+a = apple_create();
+apple_draw(a);
+
+warm = warmaple_create();
+wapple_draw(warm);
+
+
+///////////////////
+
+Apple a;
+a.draw(); //apple::draw();
+WApple w;
+w.draw();
+
+obj -> Apple -> warmapple
+|
+\---->> warm
+
+
+apple       warm
+    \      /
+    warmapple          
+
+struct warmapple
+{
+    struct apple a;
+    struct warm w;    
+}
+
+apple_draw()
+wormapple_draw(wormapple * p)
+{
+    apple * a = p;
+    warm * w = &p->w;
+    apple_draw(a); \
+                     static tipization
+    warm_draw(w);  /   
+}
+
+EX:
+
+apple * a = ...;
+warmapple = ...;
+a->draw();
+wa->draw();
+
+NEW:
+obj * a = apple_create();
+apple * a = ...;
+obj * wa = ...;
+
+a->draw();
+wa->draw();
+
+obj * p = a | wa;
+p->draw(); ???
+
+C++ v ptr;
+C
+struct apple{ };
+struct apple_m
+{
+    void (*draw)(apple * );
+    void (*SRtxy)(apple *);
+
+};
+
+1)apple :      
+-------------       
+| m | data  |
+-------------
+
+2)apple :      
+-------------       
+| m | data  |
+-------------
+  \ ptr ---
+   \--->| | <- таблица методов
+        ---
+
+1) a->draw(a); //struct without ptr (C)    2) a->m.draw(a); //struct with ptr(C++)
+
+apple_draw(p)
+{
+    ad = (char*)p +  sizeof(apple.m);
+    ad -> color;
+    ad -> x;
+}
+
+---------------------
+struct cont_methods
+{
+    next();
+    prev();
+    index();
+    first();
+    last();
+
+}
+
+cont:
+cont_methods;
+data(empty);
+
+cont        ---------\
+|                    |
+container_methods   cont_methods
+|                    |
+V                    V
+list_data            vector_data   
+
+
+list.create()
+{
+    m->first = list_first;
+    ////
+    ////
+}
+
+vector.create()
+{
+    m->first = vector->first;
+    ////
+    ////
+}
+
+test_program
+
+-Dcreate = list_create
+
+list * l = list_create();
+cont * p = vector_create();
+
+l->get_index(l, 5);
+p->add(p, new_elem);
+
+list_add(p, new_elem)
+
+1) iterator
+
+d = get_first_data();
+i = get_first();
+i = get_next(i);
+d = get_data(i);
+
+typedef int ptr_t;
+
+
+/////////////////////////
+/////// LECTURE 3 ///////
+/////////////////////////
+
+Паттерны проги
+
+Model. View. Controler
+
+Model : моделирование игрового процесса
+|-вызываем методы View
+|
+v
+Veiw : отображение игрового процесса
+
+Model
+^
+|- управление моделью
+|
+Controller : управление моделью
+
+Игра Snake
+Имеется прямоугольное поле, разбитое на клетки
+координаты (0,0) внизу 
+в некоторых клетках имеются кролики
+
+голова: <, >, v, ^
+Тело: ###
+
+^   >
+#   #
+#   #
+#   #
+
+do it using list: 
+head,           segment,  tail;
+(x,y)           (x,y)
+-----
+direction
+
+1)Напишем Makefile
+Model, View1, View2, Controller1,_2,_3
+
+View1: на текстовом терминале + управление цветом
+
+View2: используя графику(2d графика)
+
+Controller1: с помощью клавы (Human controller)
+
+Controller2: AI (using algorithm)
+
+Кто побеждает: smart controller
+Кто проигравает: dumb controller
+
+-----------------------------
+Makefile:
+model.h
+model.cc(cpp)
+//ModelPrivate.h
+
+View.h  --------
+| наследуются   |
+v               v
+tview.h         gview.h
+rview.cc        gview.cc    
+
+
+human.h
+human.cc
+-----------------------------
+main.cc
+
+Исполняемая прога Snake
+
+No: about Makefile
+CC -> CXX
+CFLAGS -> CXXFLAGS
+
+PROG = snake
+OBJ = model.o main.o ...
+
+all: $(PROG)
+
+clean:
+
+depend: $(CXX) -MM $(CXXFLAGS)
+    *.cc
+//or    
+    $(OBJ.o=.cc) > .depend
+
+-include .depend
+
+
+$(PROG): $(OBJ)
+    $(CXX) $(CXXFLAGS)
+//    -o $(PROG)    $(OBJ)
+//    -o $@         $^
+
+go to main.cpp: #include
+
+------------------------------------
+#include "Name.h"
+
+struct  
+class   Name
+{
+private:
+    int x,y,z;
+
+public:
+    void setColor(int data);
+    Name();
+    ~Name();
+};
+
+Name.cpp :
+#include "Name.h"
+
+void Name::setColor()
+{
+    //--//
+}
+Name::Name()
+{
+    //--//
+}
+Name::~Name()
+{
+    //--//
+}
+
+
+View.h------
+|          |  
+| наследуем|
+v          v
+TView    GView
+
+class TView : publicView
+{
+    
+}
+
+
+
+main.cpp :
+
+int main()
+{
+    View * v = get("text");
+               get("gui"); // get-func of View.h
+               View::get()
+
+    text ? TView() : GView();
+
+NO: when we will describe get: 
+TView.h :
+#include "View.h"
+static View * obj;
+static View * get();
+
+? = new Tview();
+? = new GView();
+//it's a fabric class
+
+fabir --> //singleton
+            fabric
+
+if (!obj)
+{
+    ...new...;
+    obj = ...
+} 
+return obj;
+
+}
+
+
+/////////////////////
+Lecture continue 
+\\\\\\\\\\\\\\\\\\\\\\
+
+class View
+{
+    static View * getview(const char * name) // name = "gui" or "text"
+    virtual void draw() = 0; //абстрактный метод
+};
+
+class Tview: public View
+{
+public:
+    virtual void draw();
+    mainloop
+private:
+    void getoxy(int x, int y)
+    {
+        putc(char c);
+        puts(char * s);
+        setcolor(int color);
+        box
+    or  hline
+        vline
+    }
+
+};
+
+void Tview::draw()
+{
+    clear();
+    hline();
+    hline();
+    vline();
+    vline();
+
+    getoxy();
+    setcolor();
+    puts();
+
+}
+
+mainloop:
+    while(!quit)
+    {
+        draw();
+        usleep(500)
+    }
+
+hline:
+
+write(1,"hello", s);
+putchar("sdf\n");
+printf
+-----
+setbuf;
+setvbuf (1, ...);
+fflush(stdout);
+
+NO: для выполнения команды:
+27 033 
+
+CSI команда
+\e[param1; param2 H
+\e[5 m]
+\e[]
+
+m - для отрисовки цвета буквы
+\e[m] - сбрасывать цвет по умолчанию
+\e[5m - установить в 5 цвет
+\e[5; 3 m] - цвет по цвету
+\e[0;..., m] - 
+printf("\e[%d m", color + 30);
+
+NO: 30 - black
+
+
+H-для перехода коретки
+\e[%d; %d H
+param1 - переход в эту строку, в позицию param2
+
+J-стирание экрана
+\e[J 
+\e[H\e[J
+
+NO: 
+переходить с однной СК в другую СК (для TView и GVIEW они разные)
+приделать рамочку к игре(1 знак)
+рисовать пустой холст
+Имя и Рейтинг
+
+
+#include "ioctl_tty.h"
+ioctl(1, CMD, struct * ptr)
+CMD:
+TIOGWINSZ
+TIOSWINSZ
+
+struct wizsize
+{
+    int ws.cols;
+    int ws.lines;
+}
+
+
+
+кролики: имеют координаты (x,y)
+-можно завести class Rabbit
+-юзать std::pair<int, int> v(x,y)
+
+-cplusplus.com
+-cppreference.com
+
+class Game
+{
+    //--//    
+}
+
+int x = 7;
+int x = int(7);
+
+typedef std::pair<int, int> rabbit;
+или
+using rabbit = std::pair<int,int>
+
+кролики - это список или вектор
+
+std::List<rabbit> rabbits;
+rabbits.push_back(5, 7);
+or rabbits.push_back(rabbit(5,7));
+
+for(const auto &r : rabbits) 
+{
+    gotoxy
+    put
+}
+
+\\\\\\\\\\\\\\\\\\
+Lecture continue
+\\\\\\\\\\\\\\\\\\
+
+line - discipline
+1) real-time keypress
+2)turn-off echo-mode
+post processing
+---------------------
+
+tcgetattr(0, TCSANOW)
+
+old = s;
+
+struct termios s;
+
+cfmakeraw(&s);
+
+tcsetattr(0, TCSANOW, &s)
+
+для обработки с клавиатуры
+1)
+while(!final)
+    read //blocked ))
+    use poll/pollin
+2)
+signal
+sigaction(SIGINT, )
+
+TView::draw(this)
+
+std::function  - контейнер указателей на функции
+
+              typedef
+void onsig(int sig)
+{
+    final = true;
+    f();
+}
+
+std::function<void(int)> f;
+f = onsig;
+
+TView::onsig()
+      /
+bind(v, onsig1);
+
+std::bind(func)
+{
+    func(this, ...)
+}
+
+-------------------
+
+View: run
+
+run()
+{
+    while(!final)
+    {
+        draw();
+        
+        keyboard_input/output();    if(keypressed)
+                                        call(key); 
+
+        timer();                    if(timer.finished)
+                                        call(time);
+    }
+}
+
+View:   on_key();
+        on_timer();
+
+Game:   keyPressed();
+
+game::keyPressed()
+
+game::game()
+{
+    v = View::getView();
+    v->on_key(key_pressed);
+    on_key.f = key_pressed;
+}
+        ( array )
+n = poll(fds, n, timeout); //возварщает кол-во файловых дескрипторов, на которых произошло событие
+        {0, POLLIN}
+n == 1
+
+-----------
+mainloop:
+
+if (n == 1) //key
+{
+    read(0, ...);
+    on_key(key);
+}
+if (n == 0)
+{
+    on_timer();    
+}
+----------------------
+
+
+cfmakeraw()
+i flags \
+o flags => 0
+c flags /
+cflags (в какой-то из битов)|= ISIG
+
+\\\\\\\\\\\\\\\\\\\\
+      Lecture
+\\\\\\\\\\\\\\\\\\\\\
+
+NO: cplusplus.com
+    cppreference.com
+
+game(model.h):
+
+std::list<coord> rabbits;
+    
+    push.back(c);
+    using coord = std::pair<int, int>;  //typedef using
+    coord c;
+
+    random() //not for c++
+
+    std::random_device rd; 
+
+    std::mt19937 gen(rd); // if you want better distribution //merrsene distribution
+
+
+    //we need not 2^n-1, but 1 ... maxx and maxy;
+
+    std::unform_int_distribution<int> (1,6) d;
+
+    x = d(gen);
+
+    n = rd();
+
+    y = d(rd);
+
+
+View.h
+int maxx();
+int maxy();
+draw();
+- - - - -  -
+paint(Coord);
+paint(string, int);
+paint(Snake);
+
+--------------------
+main(
+{
+    v = View::get();
+    game g;   
+    v->setgame(g); //&g
+    
+    No: game x;
+        game &;
+}
+
+
+game:
+
+draw()
+{
+    //all objects
+    for (z: rabbits)
+        v->paint(v);
+}
+
+------------------
+paint (const coord& );
+
+
+direction:
+    left, right, up, down
+new c = ...;
+
+1) paint(newc);
+    //head
+
+2) paint(oldc);
+    //body
+
+3) paint(tail)
+    //space
+
+class Snake
+{
+    std::list<coord> body;
+    direction   ...; //left, right, up, down
+
+
+};
+
+for drawing:
+
+1) push_front(head);
+2) pop_back();
+
+\\\\\\\\\\\\\\\\\\
+    Lecture
+\\\\\\\\\\\\\\\\\\
+
+Model: rabits, snakes
+
+             
+Veiw                Control
+            Robot AI       Human
+Tview                       
+
+Human <-> Tview
+
+View::bind_on_key(fptr)
+
+Human::Human()
+{
+    v = View::getView();
+    v->bind_on_key(std::bind(&Human::onkey, this));
+    std::function<void(int key)>;
+}
+
+onkey()
+{
+    switch(key) {
+    case LEFT: scandirection(LEFT);
+
+}
+
+AI::AI()
+{   
+    bind_on_timer(fptr, timeout);
+            <<<<<<<<</
+    list(//--//)   
+}
+
+DUMB
+AI::ontimer()
+{
+    //----
+}
+
+SMART
+AI::ontimer
+
+
+control.h -> Human & AI
+control.cpp
+
+можно передовать Human::Human(Snake &s) : snake(s)
+{
+    //...
+}
+
+
+tinyurl.com/mrxpxk8y
+
+sfml-dev.org
+
+
+onscreen
+offscreen
+
+figures -> offscreen -> win
+       draw       display
+
+
+shapes       =>   sprite  => win
+    line            ^
+    circle          #  
+    rect          loadfromfile jpg, git, ...
+
+paint: use sprites (tail, body, head etc..)
+
+---------------------------------------------------------
+
+t = std::thread(func, param)
+c = t.join();
+    detach
+
+std::atomic<int> i;
+
+            pcat
+producer            constumer
+           shared
+read(fd)  ------->   write(wfd)
+            buf
+
+
+std::async
+
+
+std::future
+     promice
