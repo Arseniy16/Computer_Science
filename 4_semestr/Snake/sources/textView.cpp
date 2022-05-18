@@ -117,7 +117,7 @@ void TextView::run()
 }
 
 void TextView::draw(const Rabbit& rabbit)
-{   
+{
     setColor(Color::RED);
     setRegime(1);
     gotoxy(rabbit.first, rabbit.second);
@@ -163,8 +163,6 @@ void TextView::draw(const Snake& snake)
         putchar('#');
     }
     resetColor();
-
-    setRegime(0);
 
     return;
 }
