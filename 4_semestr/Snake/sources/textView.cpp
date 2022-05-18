@@ -164,8 +164,21 @@ void TextView::draw(const Snake& snake)
     }
     resetColor();
 
+    setRegime(0);
+
     return;
 }
+
+void TextView::drawMood(const Point& point)
+{
+    setColor(Color::GREEN);
+    gotoxy(point.first, point.second);
+    putchar('*');
+    resetColor();
+
+    return;
+}
+
 
 void TextView::drawSpace(const Point& point)
 {

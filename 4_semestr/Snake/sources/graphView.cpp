@@ -47,6 +47,11 @@ void GraphView::drawGameBoard()
     return;
 }
 
+void GraphView::drawMood(const Point& point)
+{
+    return;
+}
+
 void GraphView::draw(const Rabbit& rabbit)
 {
     sf::CircleShape figure(pixelSize_ * 0.58);

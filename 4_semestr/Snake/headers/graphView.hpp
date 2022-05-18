@@ -18,8 +18,9 @@ public:
 
     void draw(const Rabbit& rabbit) override;
     void draw(const Snake& snake) override;
+    void drawMood(const Point& point) override;
     void drawSpace(const Point& point) override;
-
+    
     void clearSnake(const Snake& snake) override;
     void drawLost() override;
 

@@ -15,9 +15,11 @@ public:
 
     void drawGameBoard() override;
     void run() override;
-    void draw(const Rabbit& rabbit) override;
-    void draw(const Snake& snake) override;
 
+    void drawMood(const Point& point) override;
+
+    void draw(const Rabbit& rabbit) override;
+    void draw(const Snake& snake) override;    
     void drawSpace(const Point& point) override;
     void clearSnake(const Snake& snake) override;
     void drawLost() override;
@@ -43,6 +45,7 @@ private:
     void gotoxy(const int x, const int y);
     void gotoxy(const Point& point);
     void drawRectangle(const int x, const int y, const int lenX, const int lenY);
+
 
     void putchar(char c);
     void putstr(const char* str);

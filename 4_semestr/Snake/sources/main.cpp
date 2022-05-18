@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
     }
 
     Model model;
-    Human player(model.createStartSnake());
+    //Human player(model.createStartSnake());
     DumbRobot dumb1(model);
     LessDumbRobot dumb2(model);
     

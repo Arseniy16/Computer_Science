@@ -31,6 +31,7 @@ public:
     virtual void run() = 0;
     virtual void draw(const Rabbit& rabbit) = 0;
     virtual void draw(const Snake& snake) = 0;
+    virtual void drawMood(const Point& point) = 0;
     virtual void drawSpace(const Point& point) = 0;
     virtual void clearSnake(const Snake& snake) = 0;
     virtual void drawLost() = 0;

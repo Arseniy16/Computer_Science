@@ -11,10 +11,13 @@ Model::Model()
 
     for (int i = 0; i < MaxRabbits; ++i)
         rabbits_.push_front(getPoint());
+
+    for (int i = 0; i < 5; ++i)
+        moods_.push_front(getPoint());
+
 }
 
 Model::~Model(){}
-
 
 void Model::handleKey() {return;}
 
@@ -51,6 +54,31 @@ Snake& Model::createBotSnake()
 
     return snakes_.back();
 }
+
+#if 1
+void Model::getMood()
+{
+    for (auto moodIt : moods_)
+    {
+        //Point point = std::make_pair(moodIt.first, moodIt.second);
+
+        //if (!makePointValid(point)) continue;
+
+        std::uniform_int_distribution<int> distribution(1, 4);
+
+        switch (distribution(gen_))
+        {
+            case 1: moods_.push_front({moodIt.first + 1, moodIt.second}); break;
+            case 2: moods_.push_front({moodIt.first, moodIt.second + 1}); break;
+            case 3: moods_.push_front({moodIt.first - 1, moodIt.second}); break;
+            case 4: moods_.push_front({moodIt.first, moodIt.second - 1}); break;
+            default : break; 
+        }
+    }
+
+    return ;
+}
+#endif
 
 void Model::setBotController(botController MoveControl)
 {
@@ -119,6 +147,11 @@ bool Model::drawGame()
         view->draw(it);
     }
 
+    for (auto mood_it : moods_)
+    {
+        view->drawMood(mood_it);
+    }
+
     for (auto controlFunc : botUpdaterVec_)
         (controlFunc)();
 
@@ -173,7 +206,10 @@ bool Model::drawGame()
     ticks = (ticks + 1) % rabbitSpawnTime_;
     if (!ticks && (rabbits_.size() < static_cast<unsigned int>(MaxRabbits)))
         rabbits_.push_back(getPoint());
-    
+
+    ticks = (ticks + 1) % moodSpawnTime_;
+    if (!ticks && (moods_.size() < MaxMoods))
+        getMood();
 
     return false;
 }

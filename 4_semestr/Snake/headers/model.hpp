@@ -39,7 +39,8 @@ enum class Status : int
 {
     LOST,
     CATCH_RABBIT = 1,
-    ALIVE
+    ALIVE,
+    CATCH_MOOD
 };
 
 struct Snake
@@ -67,6 +68,7 @@ public:
     Snake& createStartSnake();
     Snake& createBotSnake();
     void setBotController(botController update);
+    void getMood();
 
     std::list<Rabbit>& getRabbits() { return rabbits_; }
     std::list<Snake>& getSnakes() { return snakes_; }
@@ -74,6 +76,8 @@ public:
 private:
     std::list<Rabbit> rabbits_;
     std::list<Snake> snakes_;
+    std::list<Point> moods_;
+
     std::vector<botController> botUpdaterVec_;
 
     const Point getPoint();
@@ -82,8 +86,11 @@ private:
     std::random_device gen_;
 
     const int rabbitSpawnTime_ = 5;
+    const int moodSpawnTime_ = 5;
 
     const int MaxRabbits = 20;
+
+    const unsigned int MaxMoods = 150;
 
     void SnakeMove(Snake& snake);
     void checkCrash();
